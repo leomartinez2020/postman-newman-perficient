@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "a8dc0525-f3c9-4fc8-8cc4-647092853c57",
+		"name": "PetStore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10974170"
+	},
+	"item": [
+		{
+			"name": "createPet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Pet's name was previously created in a pre-request\r",
+							"var petName = pm.collectionVariables.get(\"petName\");\r",
+							"\r",
+							"// Store response pet ID as a collection variable\r",
+							"pm.collectionVariables.set(\"petID\", res.id);\r",
+							"\r",
+							"pm.test(\"status code 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Assert pet's name\", () => {\r",
+							"  pm.expect(res.name).to.eql(petName);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Create pet's name as a variable\r",
+							"pm.collectionVariables.set(\"petName\", \"Robotnik\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"{{petName}}\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/pet",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostOrder",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Create variable with order quantity\r",
+							"pm.collectionVariables.set(\"orderQuantity\", 3);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"var orderQuantity = pm.collectionVariables.get(\"orderQuantity\");\r",
+							"var petId = pm.collectionVariables.get(\"petID\");\r",
+							"\r",
+							"pm.test(\"status code 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Assert order quantity\", () => {\r",
+							"  pm.expect(res.quantity).to.eql(orderQuantity);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Assert pet's name\", () => {\r",
+							"  pm.expect(res.petId).to.eql(petId);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"petId\": \"{{petID}}\",\r\n  \"quantity\": \"{{orderQuantity}}\",\r\n  \"shipDate\": \"2022-07-08T16:49:35.184Z\",\r\n  \"status\": \"placed\",\r\n  \"complete\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/store/order",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"store",
+						"order"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "petID",
+			"value": ""
+		},
+		{
+			"key": "petName",
+			"value": ""
+		},
+		{
+			"key": "orderQuantity",
+			"value": ""
+		}
+	]
+}
